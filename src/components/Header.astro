@@ -41,12 +41,14 @@ const nav = [
           <path d="m20 20-3.5-3.5"></path>
         </svg>
       </a>
-      <details class="relative md:hidden">
-        <summary class="cursor-pointer rounded-md border border-cyan-300/20 px-3 py-2 font-mono text-sm text-cyan-100">menu</summary>
-        <div class="terminal-pane absolute right-0 mt-3 w-52 rounded-lg p-2">
-          {nav.map(([label, href]) => (
-            <a class="block rounded-md px-3 py-2 font-mono text-sm text-slate-200 hover:bg-cyan-300/10" href={href}>{href === '/' ? 'cd /root' : `cd /${label.toLowerCase()}`}</a>
-          ))}
+      <details class="relative md:hidden [&_summary::-webkit-details-marker]:hidden">
+        <summary class="block list-none cursor-pointer rounded-md border border-cyan-300/20 px-3 py-2 font-mono text-sm text-cyan-100 marker:content-none">menu</summary>
+        <div class="absolute right-0 top-full z-50 mt-3 w-52">
+          <div class="terminal-pane rounded-lg p-2 shadow-[0_18px_48px_rgba(15,23,42,0.28)]">
+            {nav.map(([label, href]) => (
+              <a class="block rounded-md px-3 py-2 font-mono text-sm text-slate-200 hover:bg-cyan-300/10" href={href}>{href === '/' ? 'cd /root' : `cd /${label.toLowerCase()}`}</a>
+            ))}
+          </div>
         </div>
       </details>
     </div>

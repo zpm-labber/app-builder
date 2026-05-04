@@ -9,30 +9,38 @@ const enabled = repo && repoId && category && categoryId;
 ---
 
 <section class="mt-14 border-t border-cyan-300/10 pt-8">
-  <p class="prompt mb-3 text-sm">tail -f comments.log</p>
-  <h2 class="mb-4 text-xl font-semibold text-white">Comments and reactions</h2>
-  {enabled ? (
-    <section class="comments-panel">
-      <script
-        src="https://giscus.app/client.js"
-        data-repo={repo}
-        data-repo-id={repoId}
-        data-category={category}
-        data-category-id={categoryId}
-        data-mapping={mapping}
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="1"
-        data-input-position="bottom"
-        data-theme={theme}
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async></script>
-    </section>
-  ) : (
-    <p class="terminal-pane rounded-lg p-4 text-sm text-slate-400">
-      Comments are ready for Giscus. Add the public Giscus environment values to enable them.
-    </p>
-  )}
+  <div class="terminal-pane rounded-[1.5rem] shadow-[0_22px_80px_rgba(0,0,0,0.24)]">
+    <div class="terminal-topbar">
+      <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>comments://giscus/session</span>
+    </div>
+    <div class="p-5 md:p-6">
+      <p class="prompt mb-3 text-sm">tail -f comments.log</p>
+      <h2 class="mb-5 text-xl font-semibold text-white">Comments and reactions</h2>
+      {enabled ? (
+        <section class="comments-panel">
+          <script
+            src="https://giscus.app/client.js"
+            data-repo={repo}
+            data-repo-id={repoId}
+            data-category={category}
+            data-category-id={categoryId}
+            data-mapping={mapping}
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="1"
+            data-input-position="bottom"
+            data-theme={theme}
+            data-lang="en"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async></script>
+        </section>
+      ) : (
+        <p class="rounded-lg border border-cyan-300/12 bg-white/4 p-4 text-sm text-slate-400">
+          Comments are ready for Giscus. Add the public Giscus environment values to enable them.
+        </p>
+      )}
+    </div>
+  </div>
 </section>
