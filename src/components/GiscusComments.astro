@@ -3,8 +3,8 @@ const repo = import.meta.env.PUBLIC_GISCUS_REPO;
 const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
 const category = import.meta.env.PUBLIC_GISCUS_CATEGORY;
 const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
-const mapping = import.meta.env.PUBLIC_GISCUS_MAPPING ?? 'pathname';
-const theme = import.meta.env.PUBLIC_GISCUS_THEME ?? 'dark_dimmed';
+const mapping = import.meta.env.PUBLIC_GISCUS_MAPPING || 'pathname';
+const theme = import.meta.env.PUBLIC_GISCUS_THEME || 'preferred_color_scheme';
 const enabled = repo && repoId && category && categoryId;
 ---
 
@@ -12,21 +12,24 @@ const enabled = repo && repoId && category && categoryId;
   <p class="prompt mb-3 text-sm">tail -f comments.log</p>
   <h2 class="mb-4 text-xl font-semibold text-white">Comments and reactions</h2>
   {enabled ? (
-    <script
-      src="https://giscus.app/client.js"
-      data-repo={repo}
-      data-repo-id={repoId}
-      data-category={category}
-      data-category-id={categoryId}
-      data-mapping={mapping}
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="bottom"
-      data-theme={theme}
-      data-lang="en"
-      crossorigin="anonymous"
-      async></script>
+    <section class="comments-panel">
+      <script
+        src="https://giscus.app/client.js"
+        data-repo={repo}
+        data-repo-id={repoId}
+        data-category={category}
+        data-category-id={categoryId}
+        data-mapping={mapping}
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="1"
+        data-input-position="bottom"
+        data-theme={theme}
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async></script>
+    </section>
   ) : (
     <p class="terminal-pane rounded-lg p-4 text-sm text-slate-400">
       Comments are ready for Giscus. Add the public Giscus environment values to enable them.

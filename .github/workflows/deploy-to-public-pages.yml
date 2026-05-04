@@ -36,6 +36,13 @@ jobs:
 
       - name: Build Astro site and Pagefind index
         run: npm run build
+        env:
+          PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
+          PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
+          PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
+          PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
+          PUBLIC_GISCUS_MAPPING: ${{ vars.PUBLIC_GISCUS_MAPPING }}
+          PUBLIC_GISCUS_THEME: ${{ vars.PUBLIC_GISCUS_THEME }}
 
       - name: Add .nojekyll
         run: touch dist/.nojekyll

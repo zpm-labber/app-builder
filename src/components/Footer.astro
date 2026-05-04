@@ -6,7 +6,9 @@ const year = new Date().getFullYear();
   <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm text-slate-400 sm:px-6 md:grid-cols-[1fr_auto] lg:px-8">
     <div>
       <p class="prompt text-sm">cat /var/status/zpmlabber</p>
-      <p class="mt-2 font-semibold text-white">ZPMLabber workstation online.</p>
+      <p class="mt-2 font-semibold text-white">
+        ZPMLabber <span class="workstation-label">workstation</span> <span class="status-online">online</span>.
+      </p>
       <p class="mt-2 max-w-xl">Open-source developer tools, SDKs, packages, experiments, and engineering notes.</p>
     </div>
     <div class="flex flex-wrap gap-4 font-mono">
@@ -14,6 +16,6 @@ const year = new Date().getFullYear();
       <a class="hover:text-cyan-200" href="/search">Search</a>
       <a class="hover:text-cyan-200" href="/blog">Blog</a>
     </div>
-    <p class="font-mono md:col-span-2">© {year} ZPMLabber / static build / no backend required</p>
+    <p class="font-mono md:col-span-2">© {year} ZPMLabber</p>
   </div>
 </footer>

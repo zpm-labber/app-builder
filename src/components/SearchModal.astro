@@ -1,0 +1,255 @@
+---
+import SearchBox from './SearchBox.astro';
+---
+
+<section class="search-modal" data-search-modal hidden aria-hidden="true">
+  <button class="search-modal__backdrop" type="button" data-search-close aria-label="Close search"></button>
+  <div class="search-modal__frame" data-search-frame>
+    <div class="search-modal__dialog" data-search-dialog role="dialog" aria-modal="true" aria-labelledby="site-search-title">
+      <SearchBox variant="modal" inputId="site-search-modal-input" />
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    if (window.__zpmlabberSearchInit) return;
+    window.__zpmlabberSearchInit = true;
+
+    const modal = document.querySelector('[data-search-modal]');
+    const modalRoot = modal?.querySelector('[data-search-root="modal"]');
+    const modalDialog = modal?.querySelector('[data-search-dialog]');
+    const modalFrame = modal?.querySelector('[data-search-frame]');
+    const openTriggers = Array.from(document.querySelectorAll('[data-search-open]'));
+    const searchRoots = Array.from(document.querySelectorAll('[data-search-root]'));
+    let pagefindPromise;
+    let lastFocusedElement = null;
+
+    const isTypingTarget = (element) => {
+      if (!(element instanceof HTMLElement)) return false;
+      const tagName = element.tagName;
+      return element.isContentEditable || tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT';
+    };
+
+    const getPagefind = async () => {
+      if (!pagefindPromise) {
+        pagefindPromise = import('/pagefind/pagefind.js')
+          .then(async (pagefind) => {
+            if (typeof pagefind.options === 'function') {
+              await pagefind.options({});
+            }
+            return pagefind;
+          })
+          .catch(() => null);
+      }
+
+      return pagefindPromise;
+    };
+
+    const resultPath = (url) => {
+      if (!url) return '/';
+      try {
+        return new URL(url, window.location.origin).pathname || '/';
+      } catch {
+        return url;
+      }
+    };
+
+    const createResultItem = (data, index) => {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      const path = resultPath(data.url);
+      const title = data.meta?.title || path;
+      const excerpt = data.excerpt || data.meta?.description || 'Indexed document available in the static search catalog.';
+
+      item.className = 'search-results__item';
+      link.className = 'search-result';
+      link.href = data.url || '/search';
+
+      const indexLabel = document.createElement('span');
+      indexLabel.className = 'search-result__index';
+      indexLabel.textContent = String(index + 1).padStart(2, '0');
+
+      const pathLabel = document.createElement('p');
+      pathLabel.className = 'search-result__path';
+      pathLabel.textContent = path;
+
+      const titleLabel = document.createElement('h3');
+      titleLabel.className = 'search-result__title';
+      titleLabel.textContent = title;
+
+      const excerptLabel = document.createElement('p');
+      excerptLabel.className = 'search-result__excerpt';
+      excerptLabel.innerHTML = excerpt;
+
+      link.append(indexLabel, pathLabel, titleLabel, excerptLabel);
+      item.append(link);
+      return item;
+    };
+
+    const initializeSearchRoot = (root) => {
+      const input = root.querySelector('[data-search-input]');
+      const status = root.querySelector('[data-search-status]');
+      const results = root.querySelector('[data-search-results]');
+      const count = root.querySelector('[data-search-count]');
+      const meta = root.querySelector('[data-search-meta]');
+      const limit = Number(root.dataset.searchLimit || '10');
+      let token = 0;
+      let debounceHandle;
+
+      if (!(input instanceof HTMLInputElement) || !(status instanceof HTMLElement) || !(results instanceof HTMLElement) || !(count instanceof HTMLElement) || !(meta instanceof HTMLElement)) {
+        return;
+      }
+
+      const setStatus = (message, state = 'idle') => {
+        status.dataset.state = state;
+        status.textContent = message;
+      };
+
+      const resetState = () => {
+        results.innerHTML = '';
+        count.textContent = '00';
+        meta.textContent = 'panel://lookup';
+        setStatus('Type a query to inspect the static search index.', 'idle');
+      };
+
+      const showIndexMissing = () => {
+        results.innerHTML = '';
+        count.textContent = '--';
+        meta.textContent = 'panel://offline';
+        setStatus('Search index is available after production build. Run npm run build && npm run preview to test search locally.', 'error');
+      };
+
+      const renderResults = (query, items, total) => {
+        results.innerHTML = '';
+
+        if (!items.length) {
+          count.textContent = '00';
+          meta.textContent = 'panel://empty';
+          setStatus(`No indexed pages matched "${query}".`, 'empty');
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        items.forEach((item, index) => fragment.append(createResultItem(item, index)));
+        results.append(fragment);
+        count.textContent = String(items.length).padStart(2, '0');
+        meta.textContent = 'panel://results';
+        setStatus(`Found ${total} indexed ${total === 1 ? 'page' : 'pages'} for "${query}".`, 'success');
+      };
+
+      const runSearch = async (query) => {
+        const searchTerm = query.trim();
+        const currentToken = ++token;
+
+        if (!searchTerm) {
+          resetState();
+          return;
+        }
+
+        results.innerHTML = '';
+        count.textContent = '..';
+        meta.textContent = 'panel://query';
+        setStatus(`Searching Pagefind for "${searchTerm}"...`, 'loading');
+
+        const pagefind = await getPagefind();
+
+        if (!pagefind) {
+          if (currentToken !== token) return;
+          showIndexMissing();
+          return;
+        }
+
+        try {
+          const search = await pagefind.search(searchTerm);
+          const matches = Array.isArray(search?.results) ? search.results.slice(0, limit) : [];
+          const hydrated = await Promise.all(matches.map((result) => result.data()));
+
+          if (currentToken !== token) return;
+
+          renderResults(searchTerm, hydrated, search?.unfilteredResultCount ?? hydrated.length);
+        } catch {
+          if (currentToken !== token) return;
+          showIndexMissing();
+        }
+      };
+
+      input.addEventListener('input', () => {
+        window.clearTimeout(debounceHandle);
+        debounceHandle = window.setTimeout(() => runSearch(input.value), 180);
+      });
+
+      resetState();
+    };
+
+    const openModal = (trigger) => {
+      if (!(modal instanceof HTMLElement) || !(modalRoot instanceof HTMLElement)) return;
+      lastFocusedElement = trigger instanceof HTMLElement ? trigger : document.activeElement;
+      modal.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('search-modal-open');
+
+      const input = modalRoot.querySelector('[data-search-input]');
+      if (input instanceof HTMLInputElement) {
+        requestAnimationFrame(() => {
+          input.focus();
+          input.select();
+        });
+      }
+    };
+
+    const closeModal = () => {
+      if (!(modal instanceof HTMLElement) || modal.hidden) return;
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('search-modal-open');
+
+      if (lastFocusedElement instanceof HTMLElement) {
+        lastFocusedElement.focus();
+      }
+    };
+
+    searchRoots.forEach(initializeSearchRoot);
+
+    openTriggers.forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        openModal(trigger);
+      });
+    });
+
+    modal?.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      if (target.hasAttribute('data-search-close')) {
+        closeModal();
+        return;
+      }
+
+      if (modalFrame instanceof HTMLElement && modalDialog instanceof HTMLElement && modalFrame.contains(target) && !modalDialog.contains(target)) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const activeElement = document.activeElement;
+
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        openModal(activeElement);
+        return;
+      }
+
+      if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey && !isTypingTarget(activeElement)) {
+        event.preventDefault();
+        openModal(activeElement);
+        return;
+      }
+
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+  })();
+</script>

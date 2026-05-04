@@ -43,6 +43,27 @@ npm run preview
 
 `npm run build` runs `astro build` and then creates the Pagefind index from `dist`.
 
+## Search
+
+Search is powered by Pagefind.
+
+The header search icon opens the command-palette style modal, and these keyboard shortcuts open it from anywhere on the site:
+
+- Ctrl + K
+- Cmd + K
+- /
+
+The standalone `/search` page remains available as a direct-link fallback and uses the same static index.
+
+Search works after production build because Pagefind indexes the generated `dist/` output.
+
+Test locally with:
+
+```bash
+npm run build
+npm run preview
+```
+
 ## Adding A Blog Post
 
 Create a Markdown or MDX file in `src/content/blog`. Collection schemas live in `src/content.config.ts`.
@@ -112,7 +133,7 @@ PUBLIC_GISCUS_REPO_ID=
 PUBLIC_GISCUS_CATEGORY=
 PUBLIC_GISCUS_CATEGORY_ID=
 PUBLIC_GISCUS_MAPPING=pathname
-PUBLIC_GISCUS_THEME=dark_dimmed
+PUBLIC_GISCUS_THEME=preferred_color_scheme
 ```
 
 If any required value is missing, the comments component fails gracefully with a short setup note.

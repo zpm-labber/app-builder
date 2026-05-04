@@ -9,7 +9,7 @@ const { post, headings = [], previous, next } = Astro.props;
 
 <BaseLayout title={`${post.data.title} | ZPMLabber`} description={post.data.description} type="article" canonical={post.data.canonicalUrl}>
   <article class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-    <header class="max-w-3xl">
+    <header class="terminal-pane max-w-3xl rounded-[1.6rem] p-6 shadow-[0_22px_80px_rgba(0,0,0,0.24)] md:p-8">
       <p class="prompt mb-5 text-sm">vim ~/blog/{slugFromEntry(post)}.md</p>
       <div class="mb-5 flex flex-wrap gap-2">
         {post.data.tags.map((tag) => <Badge text={tag} tone="purple" />)}

@@ -2,12 +2,12 @@
 import ThemeSwitcher from './ThemeSwitcher.astro';
 
 const nav = [
+  ['Root', '/'],
+  ['About', '/about'],
   ['Blog', '/blog'],
   ['Projects', '/projects'],
   ['Packages', '/packages'],
   ['Ecosystems', '/ecosystems'],
-  ['About', '/about'],
-  ['Search', '/search'],
 ];
 ---
 
@@ -22,21 +22,30 @@ const nav = [
       />
       <span>
         <span class="block text-white">ZPMLabber</span>
-        <span class="hidden font-mono text-[0.68rem] text-emerald-200/70 sm:block">workstation: online</span>
+        <span class="hidden font-mono text-[0.68rem] sm:block">
+          <span class="workstation-label">workstation:</span>
+          <span class="status-online">online</span>
+        </span>
       </span>
     </a>
     <div class="hidden items-center gap-1 rounded-lg border border-white/10 bg-white/[0.035] p-1 font-mono md:flex">
       {nav.map(([label, href]) => (
-        <a class="rounded-md px-3 py-2 text-xs text-slate-300 transition hover:bg-cyan-300/10 hover:text-cyan-100" href={href}>/{label.toLowerCase()}</a>
+        <a class="rounded-md px-3 py-2 text-xs text-slate-300 transition hover:bg-cyan-300/10 hover:text-cyan-100" href={href}>{href === '/' ? '/root' : `/${label.toLowerCase()}`}</a>
       ))}
     </div>
     <div class="flex items-center gap-2">
       <ThemeSwitcher />
+      <a class="search-trigger" href="/search" data-search-open aria-label="Open search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+      </a>
       <details class="relative md:hidden">
         <summary class="cursor-pointer rounded-md border border-cyan-300/20 px-3 py-2 font-mono text-sm text-cyan-100">menu</summary>
         <div class="terminal-pane absolute right-0 mt-3 w-52 rounded-lg p-2">
           {nav.map(([label, href]) => (
-            <a class="block rounded-md px-3 py-2 font-mono text-sm text-slate-200 hover:bg-cyan-300/10" href={href}>cd /{label.toLowerCase()}</a>
+            <a class="block rounded-md px-3 py-2 font-mono text-sm text-slate-200 hover:bg-cyan-300/10" href={href}>{href === '/' ? 'cd /root' : `cd /${label.toLowerCase()}`}</a>
           ))}
         </div>
       </details>

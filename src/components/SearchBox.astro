@@ -1,22 +1,72 @@
-<div class="terminal-pane rounded-lg">
+---
+const {
+  variant = 'inline',
+  inputId = 'site-search-input',
+} = Astro.props;
+
+const isModal = variant === 'modal';
+const title = isModal ? 'Command Palette Search' : 'Static Search Index';
+const topbarLabel = isModal ? '~/search' : 'find ./site -type page';
+const metaLabel = isModal ? 'Ctrl K' : 'pagefind';
+---
+
+<section class="search-shell terminal-pane rounded-[1.35rem]" data-search-root={variant} data-search-limit="10">
   <div class="terminal-topbar">
     <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-    <span>find ./site -type page</span>
-    <span class="text-emerald-200/70">pagefind</span>
+    <span>{topbarLabel}</span>
+    {isModal ? (
+      <button class="search-shell__close" type="button" data-search-close aria-label="Close search">
+        :q quit
+      </button>
+    ) : (
+      <span class="text-emerald-200/80">{metaLabel}</span>
+    )}
   </div>
-  <div class="relative p-4">
-  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-  <div id="search" class="pagefind-ui"></div>
-  <p id="search-fallback" class="text-sm text-slate-400">Search is available after running a production build.</p>
-  </div>
-</div>
 
-<script is:inline>
-  const fallback = document.querySelector('#search-fallback');
-  import('/pagefind/pagefind-ui.js')
-    .then(({ PagefindUI }) => {
-      if (fallback) fallback.remove();
-      new PagefindUI({ element: '#search', showSubResults: true });
-    })
-    .catch(() => {});
-</script>
+  <div class="search-shell__body">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 id={isModal ? 'site-search-title' : undefined} class="search-shell__title">{title}</h2>
+        <p class="search-shell__subtitle">Search blog posts, packages, projects, and notes with the generated Pagefind index.</p>
+      </div>
+      <div class="search-shell__shortcut-row" aria-hidden="true">
+        <span class="search-shell__kbd">Ctrl K</span>
+        <span class="search-shell__kbd">Cmd K</span>
+        <span class="search-shell__kbd">/</span>
+      </div>
+    </div>
+
+    <label class="search-shell__prompt" for={inputId}>
+      <span class="search-shell__prompt-symbol">$</span>
+      <span class="search-shell__prompt-label">search</span>
+      <input
+        id={inputId}
+        class="search-shell__input"
+        type="search"
+        data-search-input
+        placeholder='search "unlayer"'
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </label>
+
+    <div class="search-shell__meta-row font-mono text-xs">
+      <span data-search-meta>panel://lookup</span>
+      <span data-search-count>00</span>
+    </div>
+
+    <p class="search-shell__status" data-search-status data-state="idle" role="status" aria-live="polite">
+      Type a query to inspect the static search index.
+    </p>
+
+    <ol class="search-results" data-search-results></ol>
+
+    <p class="search-shell__note">
+      Search works after production build. Run <span class="font-mono">npm run build</span> and <span class="font-mono">npm run preview</span> to test Pagefind locally.
+    </p>
+  </div>
+
+  <noscript>
+    <p class="search-shell__noscript">Interactive search requires JavaScript. You can still browse the site through the main navigation.</p>
+  </noscript>
+</section>

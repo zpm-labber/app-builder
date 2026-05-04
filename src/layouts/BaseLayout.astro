@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
+import SearchModal from '../components/SearchModal.astro';
 import '../styles/global.css';
 
 const { title, description, type, canonical } = Astro.props;
@@ -25,11 +26,16 @@ const { title, description, type, canonical } = Astro.props;
     </script>
     <SEO title={title} description={description} type={type} canonical={canonical} />
   </head>
-  <body>
+  <body id="site-top">
     <Header />
     <main data-pagefind-body>
       <slot />
     </main>
     <Footer />
+    <a class="back-to-top" href="#site-top" aria-label="Back to top">
+      <span aria-hidden="true">^</span>
+      <span>top</span>
+    </a>
+    <SearchModal />
   </body>
 </html>
