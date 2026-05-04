@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+import { slugFromEntry } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: slugFromEntry(project) }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={`${project.data.title} | ZPMLabber Projects`} description={project.data.description}>
+  <article class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+    <p class="prompt mb-5 text-sm">cat ~/projects/{slugFromEntry(project)}.md</p>
+    <div class="mb-5 flex flex-wrap gap-2">
+      <Badge text={project.data.status} tone="green" />
+      {project.data.tags.map((tag) => <Badge text={tag} />)}
+    </div>
+    <h1 class="text-4xl font-semibold text-white md:text-6xl">{project.data.title}</h1>
+    <p class="mt-5 text-lg leading-8 text-slate-300">{project.data.description}</p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      {project.data.github && <a class="command-link" href={project.data.github}>git remote</a>}
+      {project.data.website && <a class="command-link" href={project.data.website}>open site</a>}
+    </div>
+    <div class="terminal-pane mt-10 rounded-lg p-6">
+    <div class="prose prose-lg prose-invert prose-zpm max-w-none">
+      <Content />
+    </div>
+    </div>
+  </article>
+</BaseLayout>

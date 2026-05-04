@@ -1,0 +1,14 @@
+---
+const { title = '~/zpmlabber', meta = 'shell' } = Astro.props;
+---
+
+<div class="terminal-pane rounded-lg">
+  <div class="terminal-topbar">
+    <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span class="truncate text-cyan-100/80">{title}</span>
+    <span class="hidden text-slate-500 sm:inline">{meta}</span>
+  </div>
+  <div class="relative p-5">
+    <slot />
+  </div>
+</div>

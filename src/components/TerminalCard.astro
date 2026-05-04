@@ -1,0 +1,29 @@
+---
+const lines = [
+  ['$ whoami', 'ZPMLabber'],
+  ['$ echo $MISSION', 'Open-source developer tools, SDKs, packages, experiments, and engineering notes.'],
+  ['$ ls ~/ecosystems', 'community-sdks  zpm-packages  i18n-audit  play-room  apidocskit'],
+  ['$ git status --short', 'active: 8 projects  /  indexed: 7 packages  /  notes: online'],
+];
+---
+
+<div class="terminal-pane relative rounded-lg">
+  <div class="terminal-topbar">
+    <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span>~/zpmlabber/session.sh</span>
+    <span class="text-emerald-200/70">tty1</span>
+  </div>
+  <div class="relative space-y-5 p-5 font-mono text-sm">
+    {lines.map(([command, output]) => (
+      <div>
+        <p class="text-cyan-100">{command}</p>
+        <p class="mt-1 leading-6 text-slate-300">{output}</p>
+      </div>
+    ))}
+    <div class="grid grid-cols-3 gap-3 pt-2">
+    {['SDKs', 'Docs', 'Tools'].map((item) => (
+      <div class="rounded-md border border-cyan-300/15 bg-cyan-300/[0.06] p-3 text-center text-xs text-cyan-100">{item}</div>
+    ))}
+    </div>
+  </div>
+</div>

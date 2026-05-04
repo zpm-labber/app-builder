@@ -1,0 +1,45 @@
+---
+import ThemeSwitcher from './ThemeSwitcher.astro';
+
+const nav = [
+  ['Blog', '/blog'],
+  ['Projects', '/projects'],
+  ['Packages', '/packages'],
+  ['Ecosystems', '/ecosystems'],
+  ['About', '/about'],
+  ['Search', '/search'],
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-cyan-300/10 bg-void/82 backdrop-blur-xl">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Primary">
+    <a href="/" class="flex items-center gap-3 font-semibold">
+      <img
+        class="h-10 w-10 rounded-md border border-cyan-300/35 bg-cyan-300/10 object-cover shadow-[0_0_24px_rgba(0,229,255,0.12)]"
+        src="/zpmlabber.png"
+        alt="ZPMLabber logo"
+        loading="eager"
+      />
+      <span>
+        <span class="block text-white">ZPMLabber</span>
+        <span class="hidden font-mono text-[0.68rem] text-emerald-200/70 sm:block">workstation: online</span>
+      </span>
+    </a>
+    <div class="hidden items-center gap-1 rounded-lg border border-white/10 bg-white/[0.035] p-1 font-mono md:flex">
+      {nav.map(([label, href]) => (
+        <a class="rounded-md px-3 py-2 text-xs text-slate-300 transition hover:bg-cyan-300/10 hover:text-cyan-100" href={href}>/{label.toLowerCase()}</a>
+      ))}
+    </div>
+    <div class="flex items-center gap-2">
+      <ThemeSwitcher />
+      <details class="relative md:hidden">
+        <summary class="cursor-pointer rounded-md border border-cyan-300/20 px-3 py-2 font-mono text-sm text-cyan-100">menu</summary>
+        <div class="terminal-pane absolute right-0 mt-3 w-52 rounded-lg p-2">
+          {nav.map(([label, href]) => (
+            <a class="block rounded-md px-3 py-2 font-mono text-sm text-slate-200 hover:bg-cyan-300/10" href={href}>cd /{label.toLowerCase()}</a>
+          ))}
+        </div>
+      </details>
+    </div>
+  </nav>
+</header>

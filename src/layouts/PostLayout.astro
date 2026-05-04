@@ -1,0 +1,52 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Badge from '../components/Badge.astro';
+import GiscusComments from '../components/GiscusComments.astro';
+import { formatDate, readingTime, slugFromEntry } from '../lib/content';
+
+const { post, headings = [], previous, next } = Astro.props;
+---
+
+<BaseLayout title={`${post.data.title} | ZPMLabber`} description={post.data.description} type="article" canonical={post.data.canonicalUrl}>
+  <article class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <header class="max-w-3xl">
+      <p class="prompt mb-5 text-sm">vim ~/blog/{slugFromEntry(post)}.md</p>
+      <div class="mb-5 flex flex-wrap gap-2">
+        {post.data.tags.map((tag) => <Badge text={tag} tone="purple" />)}
+      </div>
+      <h1 class="text-4xl font-semibold leading-tight text-white md:text-6xl">{post.data.title}</h1>
+      <p class="mt-5 text-lg leading-8 text-slate-300">{post.data.description}</p>
+      <div class="mt-6 flex flex-wrap gap-3 font-mono text-sm text-slate-400">
+        <span>date={formatDate(post.data.date)}</span>
+        <span>mode=read</span>
+        <span>{readingTime(post)}</span>
+      </div>
+    </header>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      <div class="terminal-pane rounded-lg p-6">
+      <div class="prose prose-lg prose-invert prose-zpm max-w-none">
+        <slot />
+      </div>
+      </div>
+      {headings.length > 1 && (
+        <aside class="hidden lg:block">
+          <div class="terminal-pane sticky top-24 rounded-lg p-4">
+            <p class="prompt mb-3 text-xs">grep '^##' current.md</p>
+            <nav class="space-y-2 text-sm text-slate-300">
+              {headings.filter((heading) => heading.depth < 4).map((heading) => (
+                <a class="block hover:text-cyan-200" href={`#${heading.slug}`}>{heading.text}</a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      )}
+    </div>
+
+    <nav class="mt-12 grid gap-4 border-t border-cyan-300/10 pt-8 md:grid-cols-2">
+      {previous && <a class="terminal-pane rounded-lg p-4 font-mono text-sm hover:border-cyan-300/30" href={`/blog/${previous.slug}`}>cd ../{previous.slug}</a>}
+      {next && <a class="terminal-pane rounded-lg p-4 text-right font-mono text-sm hover:border-cyan-300/30 md:col-start-2" href={`/blog/${next.slug}`}>cd ../{next.slug}</a>}
+    </nav>
+    <GiscusComments />
+  </article>
+</BaseLayout>

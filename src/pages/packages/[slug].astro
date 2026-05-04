@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+import { slugFromEntry } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const packages = await getCollection('packages');
+  return packages.map((pkg) => ({ params: { slug: slugFromEntry(pkg) }, props: { pkg } }));
+}
+
+const { pkg } = Astro.props;
+const { Content } = await render(pkg);
+---
+
+<BaseLayout title={`${pkg.data.name} | ZPMLabber Packages`} description={pkg.data.description}>
+  <article class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+    <p class="prompt mb-5 text-sm">inspect package {slugFromEntry(pkg)}</p>
+    <div class="mb-5 flex flex-wrap gap-2">
+      <Badge text={pkg.data.status} tone="cyan" />
+      <Badge text={pkg.data.ecosystem} tone="purple" />
+      <Badge text={pkg.data.language} />
+      {pkg.data.frameworks.map((framework) => <Badge text={framework} />)}
+    </div>
+    <h1 class="text-4xl font-semibold text-white md:text-6xl">{pkg.data.name}</h1>
+    <p class="mt-5 text-lg leading-8 text-slate-300">{pkg.data.description}</p>
+    <code class="mt-7 block overflow-x-auto rounded-lg border border-emerald-300/20 bg-slate-950/90 p-4 font-mono text-emerald-100"><span class="text-cyan-200">$</span> {pkg.data.install}</code>
+    <div class="mt-7 flex flex-wrap gap-3">
+      {pkg.data.repo && <a class="command-link" href={pkg.data.repo}>git remote</a>}
+      {pkg.data.registry && <a class="command-link" href={pkg.data.registry}>open registry</a>}
+    </div>
+    <div class="terminal-pane mt-10 rounded-lg p-6">
+    <div class="prose prose-lg prose-invert prose-zpm max-w-none">
+      <Content />
+    </div>
+    </div>
+  </article>
+</BaseLayout>

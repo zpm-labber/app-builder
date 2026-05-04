@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import PostCard from '../../components/PostCard.astro';
+import Badge from '../../components/Badge.astro';
+import { byDateDesc } from '../../lib/content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(byDateDesc);
+const featured = posts.filter((post) => post.data.featured);
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+---
+
+<BaseLayout title="Blog | ZPMLabber" description="Engineering notes from ZPMLabber on open-source tools, SDKs, packages, and experiments.">
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <SectionHeading eyebrow="cd ~/blog && ls" title="Engineering notes" description="Build-in-public notes, architecture thoughts, and practical package work." />
+      <a class="command-link" href="/search">find posts</a>
+    </div>
+    <div class="mb-10 flex flex-wrap gap-2">
+      {tags.map((tag) => <Badge text={tag} />)}
+    </div>
+    {featured.length > 0 && (
+      <>
+        <h2 class="prompt mb-5 text-lg">cat featured.log</h2>
+        <div class="mb-12 grid gap-5 md:grid-cols-2">
+          {featured.map((post) => <PostCard post={post} />)}
+        </div>
+      </>
+    )}
+    <h2 class="prompt mb-5 text-lg">ls -la ./all-posts</h2>
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

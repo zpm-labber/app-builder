@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBox from '../components/SearchBox.astro';
+---
+
+<BaseLayout title="Search | ZPMLabber" description="Search ZPMLabber blog posts, projects, and package pages.">
+  <section class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+    <p class="prompt mb-4 text-sm">find . -type page</p>
+    <h1 class="text-4xl font-semibold text-white md:text-6xl">Find notes, packages, and projects.</h1>
+    <p class="mt-5 text-lg leading-8 text-slate-300">Pagefind creates the static index after production build, so this page works without a backend.</p>
+    <div class="mt-8">
+      <SearchBox />
+    </div>
+  </section>
+</BaseLayout>

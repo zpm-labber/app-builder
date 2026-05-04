@@ -1,0 +1,22 @@
+<div class="terminal-pane rounded-lg">
+  <div class="terminal-topbar">
+    <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span>find ./site -type page</span>
+    <span class="text-emerald-200/70">pagefind</span>
+  </div>
+  <div class="relative p-4">
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <div id="search" class="pagefind-ui"></div>
+  <p id="search-fallback" class="text-sm text-slate-400">Search is available after running a production build.</p>
+  </div>
+</div>
+
+<script is:inline>
+  const fallback = document.querySelector('#search-fallback');
+  import('/pagefind/pagefind-ui.js')
+    .then(({ PagefindUI }) => {
+      if (fallback) fallback.remove();
+      new PagefindUI({ element: '#search', showSubResults: true });
+    })
+    .catch(() => {});
+</script>

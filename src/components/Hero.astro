@@ -1,0 +1,44 @@
+---
+import TerminalCard from './TerminalCard.astro';
+---
+
+<section class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1.05fr_0.95fr] md:py-24 lg:px-8">
+  <div class="flex flex-col justify-center">
+    <p class="prompt mb-4 text-sm">ssh zpmlabber.dev</p>
+    <h1 class="text-5xl font-semibold leading-tight text-white md:text-7xl">ZPMLabber</h1>
+    <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+      A maintainer workstation for open-source SDKs, packages, docs tooling, refactoring experiments, and engineering notes.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a class="command-link" href="/projects">cd ./projects</a>
+      <a class="command-link" href="/blog">open blog</a>
+      <a class="command-link" href="https://github.com/zpmlabber">github --open</a>
+    </div>
+    <div class="mt-8 grid max-w-xl grid-cols-3 gap-3 font-mono text-xs text-slate-400">
+      <div class="rounded-md border border-white/10 bg-white/[0.035] p-3"><span class="text-emerald-200">08</span><br />projects</div>
+      <div class="rounded-md border border-white/10 bg-white/[0.035] p-3"><span class="text-cyan-200">07</span><br />packages</div>
+      <div class="rounded-md border border-white/10 bg-white/[0.035] p-3"><span class="text-violet-200">03</span><br />notes</div>
+    </div>
+  </div>
+  <div class="grid gap-4">
+    <div class="terminal-pane rounded-lg">
+      <div class="terminal-topbar">
+        <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>~/identity/software-god.png</span>
+        <span class="text-emerald-200/70">rendered</span>
+      </div>
+      <div class="relative p-4">
+        <img
+          class="aspect-square w-full rounded-md border border-cyan-300/15 object-cover shadow-[0_22px_80px_rgba(37,99,235,0.18)]"
+          src="/zpmlabber.png"
+          alt="ZPMLabber profile artwork showing a developer at a laptop surrounded by programming language blocks"
+          loading="eager"
+        />
+        <div class="absolute bottom-7 left-7 right-7 rounded-md border border-blue-400/30 bg-slate-950/78 px-4 py-3 font-mono text-sm text-cyan-100 backdrop-blur">
+          <span class="text-emerald-200">$</span> sudo enter --mode software-god
+        </div>
+      </div>
+    </div>
+    <TerminalCard />
+  </div>
+</section>

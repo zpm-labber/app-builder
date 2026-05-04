@@ -1,0 +1,45 @@
+<div class="theme-switcher" aria-label="Theme preference">
+  <button type="button" data-theme-choice="system" aria-pressed="true">system</button>
+  <button type="button" data-theme-choice="dark" aria-pressed="false">dark</button>
+  <button type="button" data-theme-choice="light" aria-pressed="false">light</button>
+</div>
+
+<script is:inline>
+  (() => {
+    const storageKey = 'zpmlabber-theme';
+    const root = document.documentElement;
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const buttons = Array.from(document.querySelectorAll('[data-theme-choice]'));
+
+    const storedTheme = () => localStorage.getItem(storageKey) || 'system';
+    const resolvedTheme = (theme) => theme === 'system' ? (media.matches ? 'dark' : 'light') : theme;
+
+    const applyTheme = (theme) => {
+      const resolved = resolvedTheme(theme);
+      root.dataset.themePreference = theme;
+      root.dataset.theme = resolved;
+      root.style.colorScheme = resolved;
+      buttons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.themeChoice === theme));
+      });
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const theme = button.dataset.themeChoice || 'system';
+        if (theme === 'system') {
+          localStorage.removeItem(storageKey);
+        } else {
+          localStorage.setItem(storageKey, theme);
+        }
+        applyTheme(theme);
+      });
+    });
+
+    media.addEventListener('change', () => {
+      if (storedTheme() === 'system') applyTheme('system');
+    });
+
+    applyTheme(storedTheme());
+  })();
+</script>

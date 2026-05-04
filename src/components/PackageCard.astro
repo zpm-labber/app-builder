@@ -1,0 +1,20 @@
+---
+import Badge from './Badge.astro';
+import Card from './Card.astro';
+import { slugFromEntry } from '../lib/content';
+const { pkg } = Astro.props;
+---
+
+<Card href={`/packages/${slugFromEntry(pkg)}`}>
+  <p class="mb-3 font-mono text-xs text-cyan-200/80">pkg://{pkg.data.category.toLowerCase()}/{slugFromEntry(pkg)}</p>
+  <div class="flex items-start justify-between gap-4">
+    <h3 class="text-lg font-semibold text-white group-hover:text-cyan-100">{pkg.data.name}</h3>
+    <Badge text={pkg.data.status} tone="cyan" />
+  </div>
+  <p class="mt-3 leading-7 text-slate-300">{pkg.data.description}</p>
+  <div class="mt-4 flex flex-wrap gap-2">
+    <Badge text={pkg.data.language} />
+    {pkg.data.frameworks.slice(0, 2).map((framework) => <Badge text={framework} />)}
+  </div>
+  <code class="mt-5 block overflow-x-auto rounded-md border border-emerald-300/15 bg-slate-950/90 p-3 font-mono text-sm text-emerald-100"><span class="text-cyan-200">$</span> {pkg.data.install}</code>
+</Card>

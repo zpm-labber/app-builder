@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Badge from '../components/Badge.astro';
+
+const rows = [
+  ['ZPMLabber', 'Personal creator and maintainer identity for the public body of work.'],
+  ['ZPMLabs', 'Company or umbrella brand for broader product and research surfaces.'],
+  ['Community SDKs', 'SDKs and wrappers for external APIs, services, and libraries.'],
+  ['ZPM Packages', 'Reusable packages, plugins, adapters, and developer tools.'],
+];
+---
+
+<BaseLayout title="Ecosystems | ZPMLabber" description="How ZPMLabber organizes Community SDKs, ZPM Packages, ZPMLabs, and experiments.">
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+    <SectionHeading eyebrow="cat ecosystems.map" title="How the work is organized" description="A small map for visitors who want to understand which name belongs to which surface." />
+    <div class="grid gap-5 md:grid-cols-2">
+      {rows.map(([name, description]) => (
+        <div class="terminal-pane rounded-lg p-6">
+          <Badge text="mounted" tone="green" />
+          <h2 class="text-2xl font-semibold text-white">{name}</h2>
+          <p class="mt-3 leading-7 text-slate-300">{description}</p>
+        </div>
+      ))}
+    </div>
+    <div class="prose prose-lg prose-invert prose-zpm mt-10 max-w-none">
+      <h2>Community SDKs vs ZPM Packages</h2>
+      <p>Community SDKs focus on making external services easier to consume through thoughtful wrappers, typed clients, and framework integrations.</p>
+      <p>ZPM Packages are broader reusable building blocks: plugins, adapters, auditing tools, documentation utilities, and experiments that may not be tied to a single external API.</p>
+    </div>
+  </section>
+</BaseLayout>

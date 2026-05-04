@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import PackageCard from '../../components/PackageCard.astro';
+
+const packages = await getCollection('packages');
+const groups = [...new Set(packages.map((pkg) => pkg.data.language))].sort();
+---
+
+<BaseLayout title="Packages | ZPMLabber" description="Reusable packages, SDK wrappers, plugins, adapters, and developer tools.">
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+    <SectionHeading eyebrow="ls packages/" title="Package explorer" description="Package cards are grouped by language and framework so the ecosystem stays easy to scan." />
+    <div class="space-y-12">
+      {groups.map((group) => (
+        <section>
+          <h2 class="prompt mb-5 text-lg">cd ./{group.toLowerCase().replaceAll(' ', '-')}</h2>
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {packages.filter((pkg) => pkg.data.language === group).map((pkg) => <PackageCard pkg={pkg} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
