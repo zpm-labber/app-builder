@@ -1,17 +1,15 @@
 ---
-title: "Filament UnDraw Illustrations Select"
-description: "A small Filament field for searching and selecting unDraw illustrations directly inside forms."
-date: 2026-05-04
-updated: 2026-05-04
-tags:
-  - filament
-  - laravel
-  - package
-  - undraw
-  - forms
+name: "Filament UnDraw Illustrations Select"
+description: "Filament select field for searching, previewing, and selecting unDraw illustrations."
+ecosystem: "ZPM Packages"
+category: "Filament"
+language: "PHP"
+frameworks: ["Laravel", "Filament"]
+repo: "https://github.com/zpm-packages/filament-undraw-illustrations-select"
+registry: "https://packagist.org/packages/zpmlabs/filament-undraw"
+install: "composer require zpmlabs/filament-undraw"
+status: "beta"
 featured: false
-draft: false
-canonicalUrl:
 ---
 
 ## Picking Illustrations Should Be Simple
