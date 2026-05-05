@@ -8,7 +8,7 @@ frameworks: ["Laravel", "Filament"]
 repo: "https://github.com/zpm-packages/filament-undraw-illustrations-select"
 registry: "https://packagist.org/packages/zpmlabs/filament-undraw"
 install: "composer require zpmlabs/filament-undraw"
-status: "beta"
+status: "stable"
 featured: false
 ---
 
